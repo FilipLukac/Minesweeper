@@ -46,8 +46,8 @@ public class SwingUI extends javax.swing.JFrame implements UserInterface,
 	}
 
 	public void newGameStarted(Field field) {
-		
-		//System.out.println(field.getColumnCount()+" "+field.getRowCount() );
+
+		// System.out.println(field.getColumnCount()+" "+field.getRowCount() );
 		this.field = field;
 		contentPanel.removeAll();
 		contentPanel.setLayout(new GridLayout(field.getRowCount(), field
@@ -58,16 +58,41 @@ public class SwingUI extends javax.swing.JFrame implements UserInterface,
 						row, column), row, column);
 				tileComponent.addMouseListener(this);
 				contentPanel.add(tileComponent);
-				
+
 			}
-		}update();
-				pack();
+		}
+		update();
+		pack();
 
 	}
 
 	public void mousePressed(MouseEvent e) {
-		throw new UnsupportedOperationException(
-				"Method mousePressed not yet implemented");
+		int row, column;
+
+		if (field.getState().equals(GameState.PLAYING)) {
+			TileComponent button = (TileComponent) e.getSource();
+			row = button.getRow();
+			column = button.getColumn();
+			
+			if (SwingUtilities.isLeftMouseButton(e)) {
+				field.openTile(row, column);
+				update();
+				if (field.getState().equals(GameState.SOLVED)) {
+
+					new BestTimes().addPlayerTime(System
+							.getProperty("user.name"), Minesweeper
+							.getInstance().getPlayingSeconds());
+					JOptionPane.showMessageDialog(this, "str", "WINNER!",
+							JOptionPane.PLAIN_MESSAGE);
+				} else if (field.getState().equals(GameState.FAILED)) {
+					JOptionPane.showMessageDialog(this, "str", "LOSER!",
+							JOptionPane.PLAIN_MESSAGE);
+				}
+			} else if (SwingUtilities.isRightMouseButton(e)) {
+				field.markTile(row, column);
+				update();
+			}
+		}
 	}
 
 	private void setMinesLeftLabelText() {
@@ -84,11 +109,12 @@ public class SwingUI extends javax.swing.JFrame implements UserInterface,
 
 	public void update() {
 		for (int tileCount = 0; tileCount < contentPanel.getComponentCount(); tileCount++) {
-			
-				TileComponent tileComponent = (TileComponent) contentPanel.getComponent(tileCount);
-				tileComponent.updateStyle();
-				setMinesLeftLabelText();
-			
+
+			TileComponent tileComponent = (TileComponent) contentPanel
+					.getComponent(tileCount);
+			tileComponent.updateStyle();
+			setMinesLeftLabelText();
+
 		}
 	}
 
@@ -116,8 +142,8 @@ public class SwingUI extends javax.swing.JFrame implements UserInterface,
 		jSeparator3 = new javax.swing.JSeparator();
 		bestTimesMenuItem = new javax.swing.JMenuItem();
 		bestTimesMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			    new BestTimesDialog(this,true).setVisible(true);
+			public void actionPerformed(ActionEvent aev) {
+				bestTimesMenuAction(aev);
 			}
 		});
 		jSeparator2 = new javax.swing.JSeparator();
@@ -303,30 +329,39 @@ public class SwingUI extends javax.swing.JFrame implements UserInterface,
 	private void newMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_newMenuItemActionPerformed
 		Minesweeper.getInstance().newGame();
 	}// GEN-LAST:event_newMenuItemActionPerformed
+	
+	private void bestTimesMenuAction(ActionEvent aev){
+	    new BestTimesDialog(/*this, true*/).setVisible(true);
+
+		
+	}
 
 	public void mouseClicked(MouseEvent e) {
-		int row, column;
-
-		if (field.getState().equals(GameState.PLAYING)) {
-			TileComponent button = (TileComponent) e.getSource();
-			row = button.getRow();
-			column = button.getColumn();
-			if (SwingUtilities.isLeftMouseButton(e)) {
-				field.openTile(row, column);
-				update();
-				if(field.getState().equals(GameState.SOLVED)){
-					
-					new BestTimes().addPlayerTime(System.getProperty("user.name"), Minesweeper.getInstance().getPlayingSeconds());					
-					JOptionPane.showMessageDialog(this, "str", "WINNER!", JOptionPane.PLAIN_MESSAGE);
-				}
-				else if(field.getState().equals(GameState.FAILED)){
-					JOptionPane.showMessageDialog(this, "str", "LOSER!", JOptionPane.PLAIN_MESSAGE);
-				}
-			} else if (SwingUtilities.isRightMouseButton(e)) {
-				field.markTile(row, column);
-				update();
-			}
-		}
+//		int row, column;
+//
+//		if (field.getState().equals(GameState.PLAYING)) {
+//			TileComponent button = (TileComponent) e.getSource();
+//			row = button.getRow();
+//			column = button.getColumn();
+//			if (SwingUtilities.isLeftMouseButton(e)) {
+//				field.openTile(row, column);
+//				update();
+//				if (field.getState().equals(GameState.SOLVED)) {
+//
+//					new BestTimes().addPlayerTime(System
+//							.getProperty("user.name"), Minesweeper
+//							.getInstance().getPlayingSeconds());
+//					JOptionPane.showMessageDialog(this, "str", "WINNER!",
+//							JOptionPane.PLAIN_MESSAGE);
+//				} else if (field.getState().equals(GameState.FAILED)) {
+//					JOptionPane.showMessageDialog(this, "str", "LOSER!",
+//							JOptionPane.PLAIN_MESSAGE);
+//				}
+//			} else if (SwingUtilities.isRightMouseButton(e)) {
+//				field.markTile(row, column);
+//				update();
+//			}
+//		}
 	}
 
 	public void mouseReleased(MouseEvent e) {

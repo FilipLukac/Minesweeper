@@ -1,49 +1,42 @@
 package minesweeper.swingui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
 
-import minesweeper.BestTimes;
 import minesweeper.Minesweeper;
+import javax.swing.JTextArea;
+import java.awt.BorderLayout;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.SwingConstants;
 
-public class BestTimesDialog extends JDialog {
-
-	private BestTimes bestTimes;
-	private JTextArea textArea;
-
-	public BestTimesDialog() {
-		this.setName("Best times");
-		setLocationRelativeTo(this);
-		getContentPane().setLayout(null);
-
-		textArea = new JTextArea();
-		textArea.setBounds(10, 11, 414, 206);
-		getContentPane().add(textArea);
-		textArea.setColumns(10);
-
-		JButton btnOk = new JButton("OK");
-		btnOk.setBounds(362, 228, 62, 23);
-		getContentPane().add(btnOk);
-		btnOk.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
+public class BestTimesDialog extends JDialog{
+	
+	public BestTimesDialog(){
+		
+		JScrollPane scrollPane = new JScrollPane();
+		getContentPane().add(scrollPane, BorderLayout.CENTER);
+		
+		JTextArea textArea = new JTextArea();
+		scrollPane.setViewportView(textArea);
+		
+		JPanel panel = new JPanel();
+		getContentPane().add(panel, BorderLayout.SOUTH);
+		
+		JButton btnNewButton = new JButton("OK");
+		btnNewButton.setHorizontalAlignment(SwingConstants.RIGHT);
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
 				setVisible(false);
-				dispose();
-
+			    dispose();  
 			}
 		});
-		bestTimes = Minesweeper.getInstance().getBestTimes();
-		textArea.setText(bestTimes.toString());
+		panel.add(btnNewButton);
+		textArea.setText(Minesweeper.getInstance().getBestTimes().toString());
 	}
+	
+	
 
-	public BestTimesDialog(ActionListener actionListener, boolean b) {
-		new BestTimesDialog();
-	}
 }

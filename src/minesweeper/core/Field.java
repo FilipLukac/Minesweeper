@@ -163,8 +163,10 @@ public class Field {
 	}
 
 	public void openAdjacentTile(int row, int column) {
-
+		
 		Tile tile = tiles[row][column];
+		
+		System.out.println("opening ["+row+","+column+"]");
 		tile.setState(State.OPEN);
 		if (((Clue) tile).getValue() == 0) {
 
